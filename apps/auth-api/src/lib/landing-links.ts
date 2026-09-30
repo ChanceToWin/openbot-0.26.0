@@ -1,0 +1,93 @@
+export const EXTERNAL_LINK_REL = "noopener noreferrer";
+
+export const OPENBOT_DOWNLOAD_LINKS = {
+  macos: "/download/macos",
+  windows: "/download/windows",
+  linux: "/download/linux",
+} as const;
+
+// Not a platform of its own: the landing pages offer Apple silicon, and this link is for Intel Macs.
+export const OPENBOT_MACOS_INTEL_DOWNLOAD_LINK = "/download/macos?arch=x64";
+
+export const OPENBOT_LINKS = {
+  contact: "https://x.com/OpenBot_",
+  download: "#download",
+  /** The same anchor from a page that is not the landing page. */
+  downloadFromOtherPage: "/#download",
+  news: "/news",
+  guides: "/guides",
+  plugins: "/plugins",
+  changelog: "/changelog",
+  releases: "https://github.com/nightly-labs/openbot/releases",
+  repository: "https://github.com/nightly-labs/openbot",
+  license: "https://github.com/nightly-labs/openbot/blob/main/LICENSE",
+  privacy: "https://github.com/nightly-labs/openbot/blob/main/PRIVACY.md",
+  documentation: "https://github.com/nightly-labs/openbot#readme",
+  troubleshooting: "https://github.com/nightly-labs/openbot/blob/main/docs/TROUBLESHOOTING.md",
+  architecture: "https://github.com/nightly-labs/openbot#architecture",
+  contributing: "https://github.com/nightly-labs/openbot/blob/main/CONTRIBUTING.md",
+  codex: "https://learn.chatgpt.com/docs/app-server",
+  claude: "https://code.claude.com/docs/en/overview",
+  anthropicAgents: "https://www.anthropic.com/engineering/building-effective-agents",
+} as const;
+
+/**
+ * One entry in a footer column. An internal entry carries a route, not a string,
+ * so the footer can render it as a client navigation. It also fixes a link that
+ * only worked on one page: "#download" on its own finds nothing on /news, because
+ * there is no download section there for it to scroll to.
+ */
+export type FooterLink =
+  | { readonly label: string; readonly external: true; readonly href: string }
+  | {
+      readonly label: string;
+      readonly external: false;
+      readonly to: "/" | "/news" | "/guides" | "/plugins" | "/changelog" | "/compare";
+      readonly hash?: string;
+    }
+  | { readonly label: string; readonly external: false; readonly to: "/compare/$slug"; readonly slug: string };
+
+export interface FooterColumn {
+  readonly title: string;
+  readonly links: readonly FooterLink[];
+}
+
+export const FOOTER_COLUMNS: readonly FooterColumn[] = [
+  {
+    title: "Product",
+    links: [
+      { label: "Download", external: false, to: "/", hash: "download" },
+      { label: "News", external: false, to: "/news" },
+      { label: "Guides", external: false, to: "/guides" },
+      { label: "Plugins", external: false, to: "/plugins" },
+      { label: "Changelog", external: false, to: "/changelog" },
+      { label: "Source code", external: true, href: OPENBOT_LINKS.repository },
+      { label: "License", external: true, href: OPENBOT_LINKS.license },
+      { label: "Privacy", external: true, href: OPENBOT_LINKS.privacy },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Documentation", external: true, href: OPENBOT_LINKS.documentation },
+      { label: "Troubleshooting", external: true, href: OPENBOT_LINKS.troubleshooting },
+      { label: "Architecture", external: true, href: OPENBOT_LINKS.architecture },
+      { label: "Contributing", external: true, href: OPENBOT_LINKS.contributing },
+      { label: "Codex", external: true, href: OPENBOT_LINKS.codex },
+      { label: "Claude Code", external: true, href: OPENBOT_LINKS.claude },
+    ],
+  },
+  {
+    title: "Compare",
+    links: [
+      { label: "OpenBot vs Grok Bot", external: false, to: "/compare/$slug", slug: "grok-bot" },
+      { label: "OpenBot vs Muse", external: false, to: "/compare/$slug", slug: "muse" },
+      { label: "OpenBot vs Hermes Agent", external: false, to: "/compare/$slug", slug: "hermes-agent" },
+      { label: "OpenBot vs OpenClaw", external: false, to: "/compare/$slug", slug: "openclaw" },
+      { label: "OpenBot vs Manus", external: false, to: "/compare/$slug", slug: "manus" },
+      { label: "OpenBot vs Claude Cowork", external: false, to: "/compare/$slug", slug: "claude-cowork" },
+      { label: "OpenBot vs Devin", external: false, to: "/compare/$slug", slug: "devin" },
+      { label: "All comparisons", external: false, to: "/compare" },
+    ],
+  },
+];
